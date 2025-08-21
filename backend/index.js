@@ -18,7 +18,7 @@ const dbPath = path.resolve(__dirname, '../job_tracker.db');
 
 app.use(express.json());
 
-//opening connection to the database
+//open connection to the database
 const db = new sqlite3.Database(dbPath, (err) => {
   if(err) {
     console.error('Failed to connect to database:', err.message);
@@ -45,6 +45,7 @@ db.get("SELECT COUNT(*) as count FROM applications", (err, row) => {
 //middleware to let Express parse incoming JSON requests. Needed for POST/PUT actions
 app.use(express.json());
 
+//Read data
 app.get('/applications', (req, res) => {
   db.all('SELECT * FROM applications', [], (err, rows) => {
     if (err) {
@@ -55,6 +56,8 @@ app.get('/applications', (req, res) => {
   });
 });
 
+
+//Create new data
 app.post('/applications', (req, res) => {
   const { company, position, date_applied, status, notes } = req.body;
   
@@ -70,7 +73,67 @@ app.post('/applications', (req, res) => {
   });
 });
 
-//starting the server and listening on port 3001
+// UPDATE an application (PATCH)
+app.patch('/applications/:id', (req, res) => {
+  const { id } = req.params;
+  const { company, position, date_applied, status, notes } = req.body;
+
+  const fields = [];
+  const values = [];
+
+  if (company) {
+    fields.push("company = ?");
+    values.push(company);
+  }
+  if (position) {
+    fields.push("position = ?");
+    values.push(position);
+  }
+  if (date_applied) {
+    fields.push("date_applied = ?");
+    values.push(date_applied);
+  }
+  if (status) {
+    fields.push("status = ?");
+    values.push(status);
+  }
+  if (notes) {
+    fields.push("notes = ?");
+    values.push(notes);
+  }
+
+  if (fields.length === 0) {
+    return res.status(400).json({ error: "No fields to update" });
+  }
+
+  const sql = `UPDATE applications SET ${fields.join(", ")} WHERE id = ?`;
+  values.push(id);
+
+  db.run(sql, values, function (err) {
+    if (err) {
+      return res.status(400).json({ error: err.message });
+    }
+    res.json({ message: "Application updated", changes: this.changes });
+  });
+});
+
+// DELETE a job application by ID
+app.delete("/applications/:id", (req, res) => {
+  const { id } = req.params;
+
+  db.run("DELETE FROM applications WHERE id = ?", [id], function (err) {
+    if (err) {
+      console.error("Error deleting application:", err.message);
+      res.status(500).json({ error: err.message });
+    } else if (this.changes === 0) {
+      res.status(404).json({ error: "Application not found" });
+    } else {
+      res.json({ message: "Application deleted successfully" });
+    }
+  });
+});
+
+//start the server and listening on port 3001
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
