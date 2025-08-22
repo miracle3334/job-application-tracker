@@ -2,6 +2,7 @@
 
 //importing express/sqlite3 libraries
 const express = require('express');
+const cors = require('cors');
 const sqlite3 = require('sqlite3').verbose();
 
 // built-in Node.js module for correctly building the file paths
@@ -15,6 +16,10 @@ const PORT = 3000;
 
 //absolute path for the SQLiteDB file
 const dbPath = path.resolve(__dirname, '../job_tracker.db');
+
+app.use(cors({
+  origin: 'http://localhost:5173'
+}));
 
 app.use(express.json());
 
