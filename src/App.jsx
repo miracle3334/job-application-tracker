@@ -1,12 +1,30 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 import Header from './components/Header'
+import axios from 'axios';
+import ApplicationList from './components/ApplicationList';
 
 function App() {
-  const [count, setCount] = useState(0)
+  //useState hook for storing data
+  const[applications, setApplications] = useState([]);
 
-  return (
-    <Header></Header>
+  //useEffect for fetching data from API
+  useEffect(() => {
+    axios.get('http://localhost:3000/applications')
+    .then(response => {
+      setApplications(response.data);
+    })
+    .catch(error => {
+      console.error('Error fetching applications:', error);
+    });
+  }, []);
+
+    return (
+    <div>
+      <Header />
+      <h1>Applications:</h1>
+      <ApplicationList applications={applications} />
+    </div>
   )
 }
 
