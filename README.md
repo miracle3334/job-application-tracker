@@ -1,7 +1,7 @@
 Job Application Tracker
 
 A simple React + Vite + Tailwind web application with a Node.js + Express + SQLite backend for tracking job applications.
-***---***---***---***---***---***---***---***---***---***---***---***---***---***---***---***---***---***---***---***---***
+
 -> Project Overview
 
 - This project allows you to:
@@ -13,7 +13,7 @@ A simple React + Vite + Tailwind web application with a Node.js + Express + SQLi
 - Perform CRUD operations (Create, Read, Update, Delete) on applications.
 
 - It’s designed to help practice full-stack development and learn how frontend and backend communicate through APIs.
-***---***---***---***---***---***---***---***---***---***---***---***---***---***---***---***---***---***---***---***---***
+
 -> Tech Stack
 
 - Frontend: React, Vite, Tailwind CSS
@@ -23,7 +23,7 @@ A simple React + Vite + Tailwind web application with a Node.js + Express + SQLi
 - Database: SQLite3
 
 - HTTP Requests: Axios (to communicate between frontend and backend)
-***---***---***---***---***---***---***---***---***---***---***---***---***---***---***---***---***---***---***---***---***
+
 -> Current Features
 
 - View all job applications
